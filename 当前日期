@@ -16,4 +16,5 @@ nowDay = timeAdd0(nowDay)
 nowHours = timeAdd0(nowHours)
 nowMin = timeAdd0(nowMin)
 nowSeconds = timeAdd0(nowSeconds)
-console.log(nowYear +'-'+nowMonth + nowDay + nowHours + nowMin + nowSeconds)
+console.log(nowYear + '-' + nowMonth + '-' + nowDay + '-' + nowHours + '-' + nowMin + '-'+nowSeconds)
+
