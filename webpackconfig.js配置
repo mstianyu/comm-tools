@@ -1,0 +1,146 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin'),
+    path = require('path'),
+    ExtractTextPlugin = require('extract-text-webpack-plugin'),
+    OpenBrowserPlugin = require('open-browser-webpack-plugin'),
+    webpack = require('webpack');
+
+module.exports = {
+    devtool: 'source-map',
+    entry: path.resolve(__dirname, 'app/index.js?rd=[hash:8]'),
+    output: {
+        path: __dirname + "/build",
+        filename: "bundle.js?rd=[hash:8]"
+    },
+    resolve: {
+        extensions: ['.js', '.jsx']
+    },
+    module: {
+        rules: [{
+            //js文件，  babel转换
+            test: /\.(js|jsx)$/,
+            exclude: /node_modules/,
+            include: /app/,
+            loader: "babel-loader",
+        }, {
+            test: /\.(css|less)$/,
+            use:ExtractTextPlugin.extract({
+                use:[{
+                    loader:'css-loader',
+                    options: {
+                        sourceMap: true
+                    }
+                },
+                {
+                    loader: "postcss-loader",
+                    options: {
+                        sourceMap: true
+                    }
+                },
+                {
+                    loader:'less-loader',
+                    options: {
+                        sourceMap: true,
+                    }
+                }],
+                fallback:'style-loader'
+            })   
+        }, {
+            //图片文件
+            test: /\.(png|jpg|svg|gif|jpeg|bmp)$/i,
+            use: [{
+                    loader: 'url-loader',
+                    options: {
+                        //
+                        limit: 5000,
+                        name: '../images/[name].[ext]'
+                    }
+                }
+                /*, {
+                        //压缩图片文件
+                        loader: 'image-webpack-loader'
+                      }*/
+            ]
+        }, {
+            test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            loader: "url-loader?limit=10000&mimetype=application/font-woff"
+        }, {
+            test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            loader: "file-loader"
+        }]
+    },
+
+    //插件定义
+    plugins: [
+        // 可在业务 js 代码中使用 __DEV__ 判断是否是dev模式（dev模式下可以提示错误、测试报告等, production模式不提示）
+        new webpack.DefinePlugin({
+            __DEV__: JSON.stringify(JSON.parse((process.env.NODE_ENV == 'dev') || 'false'))
+        }),
+
+        // html 模板插件
+        new HtmlWebpackPlugin({
+            title: '这是标题',
+            filename: 'index.html',
+            template: __dirname + '/app/index.html'
+        }),
+        // new webpack.ProvidePlugin({
+        //   $: "jquery",
+        //   jQuery: "jquery",
+        //   "window.jQuery": "jquery"
+        // }),
+
+        new ExtractTextPlugin('css/[name].css'),
+
+        // 热加载插件
+        new webpack.HotModuleReplacementPlugin(),
+
+        //webpack里面的loader添加插件 
+        new webpack.LoaderOptionsPlugin({
+            options: {
+                //这里的postcss配置放在了根目录下,文件为postcss.config.js
+                //添加postcss-loader的插件
+                // postcss: function() {
+                //   return [
+                //     require('autoprefixer')({
+                //       browsers: ['ie>=8', '>1% in CN']
+                //     })
+                //   ];
+                // }
+            }
+        }),
+
+        // 打开浏览器
+        new OpenBrowserPlugin({
+            url: 'http://cps.chinamcloud.com:8090'
+        })
+    ],
+
+    devServer: {
+        host:'0.0.0.0',
+        disableHostCheck: true,
+        allowedHosts:[
+            '.chinamcloud.com'
+        ],
+        proxy: {
+            // 凡是 `/api` 开头的 http 请求，都会被代理到 localhost:3000 上，由 koa 提供 mock 数据。
+
+            '/cps': {
+                // target:'http://172.29.4.98:8622/',
+                //target:'http://192.168.201.124:8082/',
+                //target:'http://192.168.201.84:8082',
+                // target:'http://192.168.201.204:8082',
+                //target:'https://www.baidu.com',
+                target:'https://devcpsservice.chinamcloud.com',
+                changeOrigin: true,
+                
+                pathRewrite: {//替换代理关键词不被传给后台
+                    '^/cps': ''
+                }
+            }
+        },
+        contentBase: "./app/public/", //本地服务器所加载的页面所在的目录
+        historyApiFallback: true, //不跳转
+        inline: true, //实时刷新
+        hot: true // 使用热加载插件 HotModuleReplacementPlugin
+    },
+
+};
