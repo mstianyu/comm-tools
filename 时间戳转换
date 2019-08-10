@@ -1,0 +1,15 @@
+  gettimetmps = (x)=>{
+   //console.log(x,typeof x)
+    
+    
+   var s = x.split('');
+   var s1 = s[0].split('-');
+   var s2 = s[1].split(':');
+ 
+   if (s2.length == 2) {
+     s2.push('00');
+   }
+    return new Date(x.replace("-", "/").replace("-", "/"));
+ 
+
+ }
