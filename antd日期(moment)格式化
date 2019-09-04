@@ -1,2 +1,2 @@
 
-moment(licenseRegisterTime).format('YYYY-MM-DD') ,'licenseRegisterTime')
+moment(licenseRegisterTime).format('YYYY-MM-DD')
