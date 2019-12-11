@@ -18,3 +18,9 @@
 //方法二
 antd 里面的moment 函数
 moment(this.state.yearsdata[this.state.years][0]["endDate"]).format('YYYY-MM-DD') 
+
+
+/时间转时间戳
+
+
+moment(time).valueOf()
