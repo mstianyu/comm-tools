@@ -1,0 +1,10 @@
+ <Form.Item>
+                  {getFieldDecorator("latitude", {
+                    rules: [
+                      {
+                        pattern: /^[+-]?(0|([1-9]\d*))(\.\d+)?$/g,
+                        message: "输入数字！"
+                      }
+                    ]
+                  })(<Input className="ant-input" placeholder="输入纬度" />)}
+                </Form.Item>
