@@ -1,2 +1,3 @@
 
 moment(data).format('YYYY-MM-DD')   //data  可以是时间戳 也可以是  其他的时间格式
+moment(end, dateFormat)
