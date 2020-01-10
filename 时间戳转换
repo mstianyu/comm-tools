@@ -24,3 +24,5 @@ moment(this.state.yearsdata[this.state.years][0]["endDate"]).format('YYYY-MM-DD'
 
 
 moment(time).valueOf()
+
+new Date().getTime()//当前时间戳
